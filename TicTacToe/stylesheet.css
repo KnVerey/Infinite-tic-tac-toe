@@ -1,0 +1,25 @@
+.box {
+	box-sizing:border-box;
+	width: 10em;
+	height: 10em;
+	border: 1px solid black;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	background-color: white;
+}
+
+#gameboard {
+	width: 31em;
+	padding: 0;
+	margin: auto;
+	padding: 5em 0;
+}
+
+main {
+	width: 100%;
+}
+
+body {
+	background-color: black;
+}

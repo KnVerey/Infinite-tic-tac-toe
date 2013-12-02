@@ -14,7 +14,7 @@ function Game(boardSize) {
 
 	this.start = function(){
 		for(var x=0; x<boardSize; x++) {
-			var row = []
+			var row = [];
 			for(var y=0; y<boardSize; y++) {
 				var box = new Box (x,y);
 				box.render();
@@ -33,14 +33,32 @@ function Game(boardSize) {
 	};
 
 	this.rowWin = function (x, y) {
-		if (y === window.game.boardSize) return true;
-		if (this.board[x][y].player !== window.game.turn) return false;
-		this.rowWin(x, y+1);
+		if (y === this.boardSize) return true;
+		if (this.board[x][y].player !== this.turn) return false;
+		return this.rowWin(x, y+1);
+	};
+
+	this.columnWin = function (x, y) {
+		if (x === this.boardSize) return true;
+		if (this.board[x][y].player !== this.turn) return false;
+		return this.columnWin(x+1, y);
+	};
+
+	this.diagonalWin = function (x, y) {
+		return false;
 	};
 
 	this.checkWin = function(box) {
-		return this.rowWin(box.x, 0);
-		// columnWin(0, box.y);
+		var centerIndex = boardSize % 2;
+		if (this.rowWin(box.x, 0)) {
+			return true;
+		} else if (this.columnWin(0, box.y)) {
+			return true;
+		} else if (this.diagonalWin(centerIndex, centerIndex)) {
+			return true;
+		} else {
+			return false;
+		}
 	};
 }
 
@@ -50,7 +68,6 @@ function Box(x,y) {
 	this.player = "";
 	this.size = Math.ceil((30/window.game.boardSize));
 	var objectBox = this;
-
 
 	this.render = function() {
 		this.$me = $("<div class='box'></div");
@@ -62,12 +79,13 @@ function Box(x,y) {
 					this.innerHTML = "<p class='marker'>" + window.game.turn + "</p>";
 					objectBox.player = window.game.turn;
 					gameOver = window.game.checkWin(objectBox);
+					console.log(gameOver);
 
 					if (gameOver) {
-						alert("Game over! " + window.game.turn + " won!")
+						alert("Game over! " + window.game.turn + " won!");
 					} else {
 						window.game.toggleTurn();
-					}	
+					}
 				}
 			});
 

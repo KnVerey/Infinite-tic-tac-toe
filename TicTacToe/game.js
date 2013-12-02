@@ -70,11 +70,11 @@ function Game(boardSize) {
 		}
 
 		if (x > this.centerIndex) {
-			return this.downDiagonalWin(x+1, y+1);
+			return this.upDiagonalWin(x+1, y-1);
 		} else if (x < this.centerIndex) {
-			return this.downDiagonalWin(x-1, y-1);
+			return this.upDiagonalWin(x-1, y+1);
 		} else if (x === this.centerIndex){
-			return (this.diagonalWin(x-1, y+1) && this.diagonalWin(x+1, y-1));
+			return (this.upDiagonalWin(x-1, y+1) && this.upDiagonalWin(x+1, y-1));
 		}
 	};
 
@@ -84,6 +84,8 @@ function Game(boardSize) {
 		} else if (this.columnWin(0, box.y)) {
 			return true;
 		} else if (this.downDiagonalWin(this.centerIndex, this.centerIndex)) {
+			return true;
+		} else if (this.upDiagonalWin(this.centerIndex, this.centerIndex)){
 			return true;
 		} else {
 			return false;

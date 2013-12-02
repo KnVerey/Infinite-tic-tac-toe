@@ -108,7 +108,7 @@ function Box(x,y) {
 	this.x = x;
 	this.y = y;
 	this.player = "";
-	this.size = Math.floor(($("#gameboard").width()/window.game.boardSize));
+	this.size = Math.floor(($("#gameboard").width()/game.boardSize));
 	var objectBox = this;
 
 	this.render = function() {
@@ -118,15 +118,15 @@ function Box(x,y) {
 			.css("width", this.size+"px")
 			.on("click", function(){
 				if (objectBox.player==="") {
-					this.innerHTML = "<p class='marker'>" + window.game.turn + "</p>";
-					objectBox.player = window.game.turn;
-					gameOver = window.game.checkWin(objectBox);
+					this.innerHTML = "<p class='marker'>" + game.turn + "</p>";
+					objectBox.player = game.turn;
+					gameOver = game.checkWin(objectBox);
 
 					if (gameOver) {
-						alert("Game over! " + window.game.turn + " won!");
-						window.game.reset();
+						alert("Game over! " + game.turn + " won!");
+						game.reset();
 					} else {
-						window.game.toggleTurn();
+						game.toggleTurn();
 					}
 				}
 			});

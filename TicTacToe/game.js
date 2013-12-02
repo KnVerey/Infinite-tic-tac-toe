@@ -89,10 +89,10 @@ function Game(boardSize) {
 			return true;
 		} else if (this.columnWin(0, box.y)) {
 			return true;
-		} else if (this.downDiagonalWin(this.centerIndex, this.centerIndex)) {
-			return true;
-		} else if (this.upDiagonalWin(this.centerIndex, this.centerIndex)){
-			return true;
+		} else if (this.board[game.centerIndex][game.centerIndex].player !== "") {
+			if ((this.downDiagonalWin(game.centerIndex, game.centerIndex)) ||
+				(this.upDiagonalWin(game.centerIndex, game.centerIndex)))
+				return true;
 		} else {
 			return false;
 		}

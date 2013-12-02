@@ -2,13 +2,14 @@
 // On hover, relevant board size displays in bkdg. On click, wrapper fades out.
 
 $(document).ready (function(){
-	window.game = new Game(3);
+	window.game = new Game(5);
 	window.game.start();
 });
 
 
 function Game(boardSize) {
 	this.boardSize = boardSize;
+	this.centerIndex = (boardSize - 1) / 2;
 	this.board = [];
 	this.turn = "X";
 
@@ -44,17 +45,45 @@ function Game(boardSize) {
 		return this.columnWin(x+1, y);
 	};
 
-	this.diagonalWin = function (x, y) {
-		return false;
+	this.downDiagonalWin = function (x, y) {
+		if (x < 0 || x === this.boardSize) return true;
+
+		if (this.board[x][y].player !== this.turn) return false;
+
+		if (x > this.centerIndex) {
+			return this.downDiagonalWin(x+1, y+1);
+		} else if (x < this.centerIndex) {
+			return this.downDiagonalWin(x-1, y-1);
+		} else if (x === this.centerIndex){
+			return (this.downDiagonalWin(x+1, y+1) && this.downDiagonalWin(x-1, y-1));
+		}
+	};
+
+	this.upDiagonalWin = function (x, y) {
+		console.log("I'm checking ["+x+"]["+y+"]");
+		if (x < 0 || x === this.boardSize) {
+			return true;
+		}
+
+		if (this.board[x][y].player !== this.turn) {
+			return false;
+		}
+
+		if (x > this.centerIndex) {
+			return this.downDiagonalWin(x+1, y+1);
+		} else if (x < this.centerIndex) {
+			return this.downDiagonalWin(x-1, y-1);
+		} else if (x === this.centerIndex){
+			return (this.diagonalWin(x-1, y+1) && this.diagonalWin(x+1, y-1));
+		}
 	};
 
 	this.checkWin = function(box) {
-		var centerIndex = boardSize % 2;
 		if (this.rowWin(box.x, 0)) {
 			return true;
 		} else if (this.columnWin(0, box.y)) {
 			return true;
-		} else if (this.diagonalWin(centerIndex, centerIndex)) {
+		} else if (this.downDiagonalWin(this.centerIndex, this.centerIndex)) {
 			return true;
 		} else {
 			return false;
@@ -79,7 +108,6 @@ function Box(x,y) {
 					this.innerHTML = "<p class='marker'>" + window.game.turn + "</p>";
 					objectBox.player = window.game.turn;
 					gameOver = window.game.checkWin(objectBox);
-					console.log(gameOver);
 
 					if (gameOver) {
 						alert("Game over! " + window.game.turn + " won!");

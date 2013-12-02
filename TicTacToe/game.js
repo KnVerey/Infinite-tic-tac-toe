@@ -1,8 +1,11 @@
-// Intro screen has transparency. Offers several board sizes, or maybe a dropdown of odd numbers.
-// On hover, relevant board size displays in bkdg. On click, wrapper fades out.
-
 $(document).ready (function(){
-	window.game = new Game(5);
+	var size = +prompt("Enter a board size (odd number please!):");
+	if (size%2===0) size += 1;
+
+	var height = $("#gameboard").height();
+	$("#gameboard").css("width", height);
+	document.body.style.fontSize = height/size - (height/size/10) + "px";
+	window.game = new Game(size);
 	window.game.start();
 });
 
@@ -60,7 +63,6 @@ function Game(boardSize) {
 	};
 
 	this.upDiagonalWin = function (x, y) {
-		console.log("I'm checking ["+x+"]["+y+"]");
 		if (x < 0 || x === this.boardSize) {
 			return true;
 		}
@@ -97,14 +99,14 @@ function Box(x,y) {
 	this.x = x;
 	this.y = y;
 	this.player = "";
-	this.size = Math.ceil((30/window.game.boardSize));
+	this.size = Math.floor(($("#gameboard").width()/window.game.boardSize));
 	var objectBox = this;
 
 	this.render = function() {
 		this.$me = $("<div class='box'></div");
 		$(this.$me)
-			.css("height", this.size+"em")
-			.css("width", this.size+"em")
+			.css("height", this.size+"px")
+			.css("width", this.size+"px")
 			.on("click", function(){
 				if (objectBox.player==="") {
 					this.innerHTML = "<p class='marker'>" + window.game.turn + "</p>";

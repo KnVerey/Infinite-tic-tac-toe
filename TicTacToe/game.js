@@ -9,16 +9,18 @@ $(document).ready (function(){
 
 function Game(boardSize) {
 	this.boardSize = boardSize;
-	this.boxes = [];
+	this.board = [];
 	this.turn = "X";
 
 	this.start = function(){
 		for(var x=0; x<boardSize; x++) {
+			var row = []
 			for(var y=0; y<boardSize; y++) {
 				var box = new Box (x,y);
 				box.render();
-				this.boxes.push(box);
+				row.push(box);
 			}
+			this.board.push(row);
 		}
 	};
 
@@ -29,12 +31,26 @@ function Game(boardSize) {
 			this.turn = "X";
 		}
 	};
+
+	this.rowWin = function (x, y) {
+		if (y === window.game.boardSize) return true;
+		if (this.board[x][y].player !== window.game.turn) return false;
+		this.rowWin(x, y+1);
+	};
+
+	this.checkWin = function(box) {
+		return this.rowWin(box.x, 0);
+		// columnWin(0, box.y);
+	};
 }
 
 function Box(x,y) {
 	this.x = x;
 	this.y = y;
-	this.size = Math.ceil((30/window.game.boardSize)) ;
+	this.player = "";
+	this.size = Math.ceil((30/window.game.boardSize));
+	var objectBox = this;
+
 
 	this.render = function() {
 		this.$me = $("<div class='box'></div");
@@ -42,9 +58,16 @@ function Box(x,y) {
 			.css("height", this.size+"em")
 			.css("width", this.size+"em")
 			.on("click", function(){
-				if (this.innerHTML==="") {
+				if (objectBox.player==="") {
 					this.innerHTML = "<p class='marker'>" + window.game.turn + "</p>";
-					window.game.toggleTurn();
+					objectBox.player = window.game.turn;
+					gameOver = window.game.checkWin(objectBox);
+
+					if (gameOver) {
+						alert("Game over! " + window.game.turn + " won!")
+					} else {
+						window.game.toggleTurn();
+					}	
 				}
 			});
 

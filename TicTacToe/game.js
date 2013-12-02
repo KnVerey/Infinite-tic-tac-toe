@@ -1,4 +1,8 @@
 $(document).ready (function(){
+	initializeGame();
+});
+
+function initializeGame() {
 	var size = +prompt("Enter a board size (odd number please!):");
 	if (size%2===0) size += 1;
 
@@ -7,7 +11,7 @@ $(document).ready (function(){
 	document.body.style.fontSize = height/size - (height/size/10) + "px";
 	window.game = new Game(size);
 	window.game.start();
-});
+}
 
 
 function Game(boardSize) {
@@ -30,8 +34,8 @@ function Game(boardSize) {
 
 	this.toggleTurn = function() {
 		if (this.turn === "X") {
-			this.turn = "Y";
-		} else if (this.turn === "Y") {
+			this.turn = "O";
+		} else if (this.turn === "O") {
 			this.turn = "X";
 		}
 	};
@@ -93,6 +97,11 @@ function Game(boardSize) {
 			return false;
 		}
 	};
+
+	this.reset = function() {
+		$("#gameboard").children().remove();
+		initializeGame();
+	};
 }
 
 function Box(x,y) {
@@ -115,6 +124,7 @@ function Box(x,y) {
 
 					if (gameOver) {
 						alert("Game over! " + window.game.turn + " won!");
+						window.game.reset();
 					} else {
 						window.game.toggleTurn();
 					}

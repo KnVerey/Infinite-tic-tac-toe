@@ -1,5 +1,5 @@
 @board_size = 3		#must be an odd number
-@center_index = (@board_size -1)/ 2
+@center_index = (@board_size - 1)/ 2
 @player = "X" #Or maybe zeros and ones?
 @board = [[]] #Two-dimensional array, 'square'
 

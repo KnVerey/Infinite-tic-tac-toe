@@ -3,10 +3,11 @@ $(document).ready (function(){
 });
 
 function initializeGame() {
-	var size = +prompt("Enter a board size (odd number please!):");
-	if (size%2===0) size += 1;
-
 	var height = $("#gameboard").height();
+	var size = Math.round(+prompt("Enter a board size (must be an ODD number and will max out if your window is too small):"));
+	if (height/size < 30 ) { size = Math.floor(height/30); }
+	if (size%2===0) { size += 1; }
+
 	$("#gameboard").css("width", height);
 	document.body.style.fontSize = height/size - (height/size/10) + "px";
 	window.game = new Game(size);

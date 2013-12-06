@@ -24,6 +24,11 @@
 	function Game(boardSize) {
 		this.boardSize = boardSize;
 		this.centerIndex = (boardSize - 1) / 2;
+		this.topleft = [-1, 1];
+		this.topright = [1, 1];
+		this.bottomleft = [-1, -1];
+		this.bottomright = [1, -1];
+
 		this.board = [];
 		this.turn = "X";
 
@@ -66,44 +71,24 @@
 			return this.columnWin(x + 1, y);
 		};
 
-		this.diagonalWin = function (x, y) {
-			// (x = x || defaultValue) doesn't work b/c 0 is possible and returns false
+		this.diagonalWin = function (x, y, quadrant) {
+			// set default values for first call
 			var x  = ( x === undefined ? this.centerIndex : x );
 			var y  = ( y === undefined ? this.centerIndex : y );
 
+			// exit if off board or not current player
 			if ( x < 0 || x === this.boardSize ) return true;
 			if ( this.board[x][y].player !== this.turn ) return false;
 
-			var direction = this.quandrantCheck(x, y); // okay to put here because not needed if don't get here?
-			if ( direction ) {
-				return this.diagonalWin(direction.x, direction.y);
+			// skipped on first call only
+			if (quadrant) {
+				x = x + quadrant[0];
+				y = y + quadrant[1];
+				return this.diagonalWin(x, y, quadrant);
 			}
 
-			return ( (this.diagonalWin(x - 1, y + 1) && this.diagonalWin(x + 1, y - 1)) || (this.diagonalWin(x + 1, y + 1) && this.diagonalWin(x -1, y -1)) );
+			return ((this.diagonalWin(x, y, this.topleft) && this.diagonalWin(x, y, this.bottomright)) || (this.diagonalWin(x, y, this.topright) && this.diagonalWin(x, y, this.bottomleft)));
 		};
-
-		this.quandrantCheck = function(x, y) {
-			var value = {};
-
-			if ( x > this.centerIndex && y > this.centerIndex ) {
-				value.x = x + 1;
-				value.y = y + 1;
-			} else if ( x < this.centerIndex && y < this.centerIndex ) {
-				value.x = x - 1;
-				value.y = y - 1;
-			} else if ( x > this.centerIndex && y < this.centerIndex ) {
-				value.x = x + 1;
-				value.y = y - 1;
-			} else if ( x < this.centerIndex && y > this.centerIndex ) {
-				value.x = x - 1;
-				value.y = y + 1;
-			} else {
-				return false;
-			}
-
-			return value;
-		};
-
 
 		this.checkWin = function(box) {
 			if (this.rowWin(box.x, 0)) {

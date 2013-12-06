@@ -85,16 +85,19 @@ function Game(boardSize) {
 	// };
 
 	this.diagonalWin = function (x, y) {
-		var x = x || this.centerIndex,
-				y = y || this.centerIndex;
+		// (x = x || defaultValue) doesn't work b/c 0 is possible and returns false
+		var x  = ( x === undefined ? this.centerIndex : x );
+		var y  = ( y === undefined ? this.centerIndex : y );
 
 		if ( x < 0 || x === this.boardSize ) return true;
 		if ( this.board[x][y].player !== this.turn ) return false;
 
-		direction = quandrantCheck(x, y);
-		if ( direction ) return this.diagonalWin(direction.x, direction.y);
+		var direction = this.quandrantCheck(x, y); // okay to put here because not needed if don't get here?
+		if ( direction ) {
+			return this.diagonalWin(direction.x, direction.y);
+		}
 
-		return ( this.upDiagonalWin(x - 1, y + 1) && this.upDiagonalWin(x + 1, y - 1) );
+		return ( (this.diagonalWin(x - 1, y + 1) && this.diagonalWin(x + 1, y - 1)) || (this.diagonalWin(x + 1, y + 1) && this.diagonalWin(x -1, y -1)) );
 	};
 
 	this.quandrantCheck = function(x, y) {

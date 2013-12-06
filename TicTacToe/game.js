@@ -39,6 +39,7 @@ function Game(boardSize) {
 		} else if (this.turn === "O") {
 			this.turn = "X";
 		}
+		$("#player").html(this.turn);
 	};
 
 	this.rowWin = function (x, y) {

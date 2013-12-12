@@ -5,7 +5,7 @@
 	});
 
 	// refactor to be part of game (and called immediately, but not as SEF for clarity)
-	// can't? need to use to create new instances, including on reset. Could redistribute code to do it though. Better?
+	// this is a pattern. do the advanced js tutorial to learn it
 	function initializeGame() {
 		var height = $("#gameboard").height();
 		var size = Math.round(+prompt("Enter a board size (must be an ODD number and will max out if your window is too small):"));
@@ -87,7 +87,8 @@
 				return this.diagonalWin(x, y, quadrant);
 			}
 
-			return ((this.diagonalWin(x, y, this.topleft) && this.diagonalWin(x, y, this.bottomright)) || (this.diagonalWin(x, y, this.topright) && this.diagonalWin(x, y, this.bottomleft)));
+			return ( (this.diagonalWin(x, y, this.topleft) && this.diagonalWin(x, y, this.bottomright)) ||
+							 (this.diagonalWin(x, y, this.topright) && this.diagonalWin(x, y, this.bottomleft)) );
 		};
 
 		this.checkWin = function(box) {
